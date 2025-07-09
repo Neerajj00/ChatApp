@@ -59,14 +59,14 @@ export async function signup(req, res) {
         expiresIn: "7d"
     });
 
-    res.cookie("jwt",token , {
+    res.cookie("jwt", token, {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production"
-    })
-
-    res.status(201).json({success:true, user:newUser})
+    });
+  
+    res.status(201).json({success:true, user:newUser , token})
   } catch (error) {
     console.log("Error in signup controller", error);
     res.status(500).json({message:"internal server errro"});
@@ -79,16 +79,16 @@ export async function login(req, res) {
     if(!email || ! password) return res.status(400).json({message: "All fields are required"});
     const user = await User.findOne({email});
     if(!user){
-        return res.status(401).json({message:"Invalid email of password"});
+        return res.status(401).json({message:"Invalid email or password"});
     }
     
     const isPasswordCorrect = await bcrypt.compare(password , user.password);
     
     if(!isPasswordCorrect){
-        return res.status(401).json({message:"Invalid email of password"});
+        return res.status(401).json({message:"Invalid email or password"});
     }
 
-    const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {
+    const token =jwt.sign({userId: user._id}, process.env.JWT_SECRET, {
         expiresIn: "7d"
     });
 
@@ -98,8 +98,8 @@ export async function login(req, res) {
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production"
     })
-
-    res.status(200).json({status:true, message:"login Successfull" , user});
+    
+    res.status(200).json({status:true, message:"login Successfull" , user , token});
     
 } catch (error) {
     console.log("error in login controller", error.message);
@@ -110,4 +110,9 @@ export async function login(req, res) {
 export function logout(req, res) {
   res.clearCookie("jwt");
   res.status(200).json({success:true, message:"logout successfull"});
+}
+
+export function onboard(req, res){
+  console.log(req.user);
+  res.status(200).json({ success: true, user: req.user });
 }
