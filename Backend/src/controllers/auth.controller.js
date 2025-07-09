@@ -113,7 +113,8 @@ export function logout(req, res) {
 }
 
 export async function onboard(req, res){
-  const userId = req.user._id;
+  try {
+    const userId = req.user._id;
   const {fullName , bio , nativeLanguage, learningLanguage, location} = req.body;
   
   if(!fullName || !bio || !nativeLanguage || !learningLanguage || !location){
@@ -134,5 +135,10 @@ export async function onboard(req, res){
     isOnBoarded:true,
   }, {new:true});
 
+  if(!updatedUser) return res.status(404).json({message:"User not found"});
+
   res.status(200).json({ success: true, oldValue: req.user , newValue: updatedUser});
+} catch (error) {
+    res.status(500).json({ success: false,message: "Internal server error"});
+  }
 }
