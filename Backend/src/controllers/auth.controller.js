@@ -126,7 +126,7 @@ export async function onboard(req, res){
         !nativeLanguage && "nativeLanguage", 
         !learningLanguage  && "learningLanguage",
         !location && "location"
-      ]
+      ].filter(Boolean)
     });
   }
 
@@ -136,6 +136,17 @@ export async function onboard(req, res){
   }, {new:true});
 
   if(!updatedUser) return res.status(404).json({message:"User not found"});
+
+  try {
+      await upsertStreamUser({
+          id: updatedUser._id.toString(),
+          name: updatedUser.fullName,
+          image: updatedUser.profilePic || ""
+      });
+      console.log(`Stream user created for ${updatedUser.fullName}`);
+  } catch (error) {
+      console.log("error creating stream user", error.message);
+  }
 
   res.status(200).json({ success: true, oldValue: req.user , newValue: updatedUser});
 } catch (error) {
