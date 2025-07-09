@@ -32,8 +32,10 @@ export async function authorize(req, res, next) {
       return res
         .status(401)
         .json({ success: false, message: "Unauthorize - No User found" });
+        
     req.user = user;
     next();
+
   } catch (error) {
     console.log("Error in auth middleWare: ", error.message);
     return res

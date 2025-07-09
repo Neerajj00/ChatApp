@@ -112,7 +112,27 @@ export function logout(req, res) {
   res.status(200).json({success:true, message:"logout successfull"});
 }
 
-export function onboard(req, res){
-  console.log(req.user);
-  res.status(200).json({ success: true, user: req.user });
+export async function onboard(req, res){
+  const userId = req.user._id;
+  const {fullName , bio , nativeLanguage, learningLanguage, location} = req.body;
+  
+  if(!fullName || !bio || !nativeLanguage || !learningLanguage || !location){
+    return res.status(400).json({ 
+      message: "All fields are required" ,
+      missingFields :[
+        !fullName && "fullName",
+        !bio && "bio",
+        !nativeLanguage && "nativeLanguage", 
+        !learningLanguage  && "learningLanguage",
+        !location && "location"
+      ]
+    });
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, {
+    ...req.body,
+    isOnBoarded:true,
+  }, {new:true});
+
+  res.status(200).json({ success: true, oldValue: req.user , newValue: updatedUser});
 }
