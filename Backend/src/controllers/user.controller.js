@@ -23,6 +23,13 @@ export async function getRecommendedUsers(req,res){
     }
 }
 
-export function getMyFriends(){
+export async function getMyFriends(req, res){
+    try {
+        const user = await User.findById(req.user.id).select("friends").populate("friends", "fullName profilePic nativeLanguage learningLanguage");
 
+        res.status(200).json(user.friends);
+    } catch (error) {
+        console.log("error in get friends controller: ", error.message);
+        res.status(500).json({success:false, message:"Internal Server Error"});
+    }
 }
