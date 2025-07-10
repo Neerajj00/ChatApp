@@ -82,6 +82,7 @@ export async function sendFriendRequest(req, res){
         res.status(500).json({success:false, message:"Internal Server Error"});
     }
 }
+
 export async function acceptFriendRequest(req, res){
     try {
         const {id:requestId} = req.params
@@ -137,6 +138,22 @@ export async function getFriendRequests(req, res){
 
     }catch (error) {
         console.log("error in get friend requests controller: ", error.message);
+        res.status(500).json({success:false, message:"Internal Server Error"});
+    }
+}
+
+export async function getOutgoingFriendRequests(req, res){
+    try {
+        const userId = req.user.id;
+
+        const outgoingRequests = await FriendRequest.find({
+            sender:userId,
+            status:"pending"
+        }).populate("recipient", "fullName profilePic nativeLanguage learningLanguage");
+
+        res.status(200).json(outgoingRequests);
+    } catch (error) {
+        console.log("error in get outgoing friend requests controller: ", error.message);
         res.status(500).json({success:false, message:"Internal Server Error"});
     }
 }
