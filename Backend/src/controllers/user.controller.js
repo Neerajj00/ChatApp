@@ -1,5 +1,7 @@
 
 import User from './../models/User.js';
+import FriendRequest from './../models/FriendRequest';
+import FriendRequest from './../models/FriendRequest';
 
 
 export async function getRecommendedUsers(req,res){
@@ -30,6 +32,53 @@ export async function getMyFriends(req, res){
         res.status(200).json(user.friends);
     } catch (error) {
         console.log("error in get friends controller: ", error.message);
+        res.status(500).json({success:false, message:"Internal Server Error"});
+    }
+}
+
+export async function sendFriendRequest(req, res){
+    try {
+        const myId = req.user.id;
+        const {id:recipientId} = req.params
+
+        //prevent sending request to yourself
+        if(myId === recipientId){
+            return res.status(400).json({message:"you can not send friend reuest to yourself"});
+        }
+
+        const recipient = await User.findById(recipientId);
+
+        // recipient not found
+        if(!recipient){
+            return res.status(404).json({message:"Recipient not found"});
+        }
+        
+        // already friend
+        if(recipient.friends.includes(myId)){
+            return res.status(400).json({message:"You are already the friend with this user"});
+        }
+
+        // check if request already exist
+        const existingRequest = await FriendRequest.findOne({
+            $or:[
+                {sender: myId , recipient:recipientId},
+                {sender:recipientId  , recipient:myId},
+            ]
+        })
+
+        if(existingRequest){
+            return res.status(400).json({message:"a friend request already exists between you and this user"});
+        }
+
+        const friendRequest = await FriendRequest.create({
+            sender:myId,
+            recipient:recipientId
+        })
+        
+        res.status(201).json({friendRequest});
+
+    } catch (error) {
+        console.log("error in send friend request controller: ", error.message);
         res.status(500).json({success:false, message:"Internal Server Error"});
     }
 }
