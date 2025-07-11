@@ -7,10 +7,12 @@ import NotificationPage from './pages/NotificationPage.jsx';
 import CallPage from './pages/CallPage.jsx';
 import ChatPage from './pages/ChatPage.jsx';
 import OnBoardingPage from './pages/OnBoardingPage.jsx';
+import {Toaster , toast } from "react-hot-toast"
 
 function App() {
   return (
-    <div className="" data-theme = "night">
+    <div className="h-screen" data-theme = "night">
+      <button onClick={()=>toast.error("error on clicking")}>create a toast</button>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/signup" element={<SignUpPage/>} />
@@ -20,6 +22,8 @@ function App() {
         <Route path="/chat" element={<ChatPage/>} />
         <Route path="/onboarding" element={<OnBoardingPage/>} />
       </Routes>
+      
+      <Toaster/>
     </div>
   );
 }
