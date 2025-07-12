@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
 import {Link} from "react-router"
 import {useMutation, useQueryClient} from "@tanstack/react-query"
-import { axiosInstance } from './../lib/axios.js';
+import { signUp } from "../lib/api.js";
 
 
 function SignUpPage() {
@@ -13,18 +13,15 @@ function SignUpPage() {
   });
 
   const queryClient = useQueryClient();
-  const{mutate, isLoading, isError} = useMutation({
-    mutationFn: async ()=> {
-      const response = await axiosInstance.post('/auth/signup' , signUpData)
-      return response.data;
-    },
+  const{mutate:signUpMutation, isLoading, error} = useMutation({
+    mutationFn: signUp,
     onSuccess: ()=> queryClient.invalidateQueries({queryKey: ["authUser"]})
     });
 
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    mutate();
+    signUpMutation(signUpData);
   };
 
   return (
@@ -43,6 +40,13 @@ function SignUpPage() {
               ChatApp
             </span>
           </div>
+
+          {/* error */}
+          {error && (
+          <div className="alert alert-error mb-4">
+            <span>{error.response.data.message}</span>
+          </div>
+          )}
 
           <div className="w-full">
             <form onSubmit={handleSignUp}>
