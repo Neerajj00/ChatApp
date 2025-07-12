@@ -25,7 +25,6 @@ function App() {
 
   return (
     <div className="h-screen" data-theme = "night">
-      <button onClick={()=>toast.error("error on clicking")}>create a toast</button>
       <Routes>
         <Route path="/" element={authUser ? <HomePage/> : <Navigate to="/login" /> } />
         <Route path="/signup" element={ !authUser ? <SignUpPage/> : <Navigate to="/" /> } />
