@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
-import { toast } from 'react-hot-toast';
 import {Link} from "react-router"
+import {useMutation, useQueryClient} from "@tanstack/react-query"
+import { axiosInstance } from './../lib/axios.js';
 
 
 function SignUpPage() {
@@ -11,8 +12,19 @@ function SignUpPage() {
     password: "",
   });
 
+  const queryClient = useQueryClient();
+  const{mutate, isLoading, isError} = useMutation({
+    mutationFn: async ()=> {
+      const response = await axiosInstance.post('/auth/signup' , signUpData)
+      return response.data;
+    },
+    onSuccess: ()=> queryClient.invalidateQueries({queryKey: ["authUser"]})
+    });
+
+
   const handleSignUp = (e) => {
     e.preventDefault();
+    mutate();
   };
 
   return (
@@ -33,10 +45,10 @@ function SignUpPage() {
           </div>
 
           <div className="w-full">
-            <form action="#" onSubmit={() => handleSignUp}>
+            <form onSubmit={handleSignUp}>
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Create a account</h2>
-                <p>Join Streamify and start your language learning adventure</p>
+                <p>Join ChatApp and start your language learning adventure</p>
               </div>
 
               <div className="space-y-3">
@@ -48,7 +60,7 @@ function SignUpPage() {
                     type="text"
                     placeholder="John Doe"
                     className="input input-bordered w-full"
-                    value={signUpData.fullName}
+                    value={signUpData.fullName || ""}
                     onChange={(e) =>
                       setSignUpData({ ...signUpData, fullName: e.target.value })
                     }
@@ -63,7 +75,7 @@ function SignUpPage() {
                     type="email"
                     placeholder="johndoe@gmail.com"
                     className="input input-bordered w-full"
-                    value={signUpData.email}
+                    value={signUpData.email || ""}
                     onChange={(e) =>
                       setSignUpData({ ...signUpData, email: e.target.value })
                     }
@@ -78,7 +90,7 @@ function SignUpPage() {
                     type="password"
                     placeholder="******"
                     className="input input-bordered w-full"
-                    value={signUpData.password}
+                    value={signUpData.password || ""}
                     onChange={(e) =>
                       setSignUpData({ ...signUpData, password: e.target.value })
                     }
@@ -88,7 +100,7 @@ function SignUpPage() {
                 </div>
               </div>
               <button className="btn btn-primary mt-4 w-full " type="submit">
-                    Create Account
+                {isLoading ? "Signing up..." : "Create Account"}
               </button>
               <div className="text-center mt-4">
                 <p className="text-sm">
@@ -118,9 +130,7 @@ function SignUpPage() {
                     Practice conversation, make friends, and improve your language skills together
               </p>
             </div>
-
           </div>
-
         </div>
       </div>
     </div>
