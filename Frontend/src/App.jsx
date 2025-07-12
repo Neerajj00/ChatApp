@@ -8,8 +8,21 @@ import CallPage from './pages/CallPage.jsx';
 import ChatPage from './pages/ChatPage.jsx';
 import OnBoardingPage from './pages/OnBoardingPage.jsx';
 import {Toaster , toast } from "react-hot-toast"
+import { axiosInstance } from "./lib/axios.js";
+import { useQuery } from "@tanstack/react-query";
 
 function App() {
+  const {data} = useQuery({
+    queryKey : ["todos"],
+    queryFn: async()=>{
+      const response = await axiosInstance.get("/auth/me");
+      return response.data;
+    },
+    retry: false,
+  })
+
+  console.log(data);
+
   return (
     <div className="h-screen" data-theme = "night">
       <button onClick={()=>toast.error("error on clicking")}>create a toast</button>
