@@ -13,7 +13,7 @@ function SignUpPage() {
   });
 
   const queryClient = useQueryClient();
-  const{mutate:signUpMutation, isLoading, error} = useMutation({
+  const{mutate:signUpMutation, isPending, error} = useMutation({
     mutationFn: signUp,
     onSuccess: ()=> queryClient.invalidateQueries({queryKey: ["authUser"]})
     });
@@ -104,7 +104,10 @@ function SignUpPage() {
                 </div>
               </div>
               <button className="btn btn-primary mt-4 w-full " type="submit">
-                {isLoading ? "Signing up..." : "Create Account"}
+                {isPending ? <>
+                  <span className="loading loading-spinner loading-xs" />
+                  Signing up...
+                </> : "Create Account"}
               </button>
               <div className="text-center mt-4">
                 <p className="text-sm">
