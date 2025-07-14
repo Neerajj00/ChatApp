@@ -7,12 +7,13 @@ import NotificationPage from './pages/NotificationPage.jsx';
 import CallPage from './pages/CallPage.jsx';
 import ChatPage from './pages/ChatPage.jsx';
 import OnBoardingPage from './pages/OnBoardingPage.jsx';
-import {Toaster , toast } from "react-hot-toast"
+import {Toaster  } from "react-hot-toast"
 import { axiosInstance } from "./lib/axios.js";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "./components/Loader.jsx";
 
 function App() {
-  const {data:authData} = useQuery({
+  const {data:authData , isLoading} = useQuery({
     queryKey : ["authUser"],
     queryFn: async()=>{
       const response = await axiosInstance.get("/auth/me");
@@ -22,7 +23,7 @@ function App() {
   })
   
   const authUser = authData?.user;
-
+  if(isLoading) return <Loader />
   return (
     <div className="h-screen" data-theme = "night">
       <Routes>
