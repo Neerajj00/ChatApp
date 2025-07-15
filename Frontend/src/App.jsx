@@ -11,17 +11,18 @@ import {Toaster  } from "react-hot-toast"
 import Loader from "./components/Loader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
 import Layout  from "./components/Layout.jsx";
+import {useTheme} from "./store/useTheme.js"
 
 function App() {
   const {isLoading, authUser} = useAuthUser();
   const isAuthenticated = Boolean(authUser);
   const isOnBoarded = authUser?.isOnBoarded
 
-
+  const {theme}= useTheme();
   if(isLoading) return <Loader />
 
   return (
-    <div className="h-screen" data-theme = "night">
+    <div className="h-screen" data-theme = {theme}>
       <Routes>
         <Route path="/" element={isAuthenticated && isOnBoarded ? 
         <Layout showSidebar={true}>
