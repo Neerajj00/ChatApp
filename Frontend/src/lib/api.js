@@ -5,6 +5,11 @@ export const signUp = async (signUpData)=> {
     return response.data;
 }
 
+export const signIn = async (signInData)=> {
+    const response = await axiosInstance.post('/auth/login' , signInData)
+    return response.data;
+}
+
 export const authUser = async () => {
     const response = await axiosInstance.get("/auth/me");
     return response.data;
