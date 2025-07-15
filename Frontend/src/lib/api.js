@@ -10,9 +10,19 @@ export const signIn = async (signInData)=> {
     return response.data;
 }
 
-export const authUser = async () => {
-    const response = await axiosInstance.get("/auth/me");
+export const logOut = async ()=> {
+    const response = await axiosInstance.post('/auth/logout')
     return response.data;
+}
+
+export const authUser = async () => {
+    try {
+        const response = await axiosInstance.get("/auth/me");
+        return response.data;
+    } catch (error) {
+        console.log("error in authUser", error);
+        return null
+    }
 }
 
 export const completeOnboarding = async(userData)=>{

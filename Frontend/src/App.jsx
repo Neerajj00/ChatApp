@@ -10,6 +10,7 @@ import OnBoardingPage from './pages/OnBoardingPage.jsx';
 import {Toaster  } from "react-hot-toast"
 import Loader from "./components/Loader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
+import Layout  from "./components/Layout.jsx";
 
 function App() {
   const {isLoading, authUser} = useAuthUser();
@@ -22,7 +23,11 @@ function App() {
   return (
     <div className="h-screen" data-theme = "night">
       <Routes>
-        <Route path="/" element={isAuthenticated && isOnBoarded ? <HomePage/> : <Navigate to={!isAuthenticated ? "/login" : "/onboarding" } /> } />
+        <Route path="/" element={isAuthenticated && isOnBoarded ? 
+        <Layout showSidebar={true}>
+          <HomePage/> 
+        </Layout>
+        : <Navigate to={!isAuthenticated ? "/login" : "/onboarding" } /> } />
         <Route path="/signup" element={ !isAuthenticated ? <SignUpPage/> : <Navigate to={isOnBoarded ? "/" : "/onboarding" } /> } />
         <Route path="/login" element={ !isAuthenticated ? <LoginPage/> : <Navigate to={isOnBoarded ? "/" : "/onboarding" } /> } />
         <Route path="/notification" element={ isAuthenticated ? <NotificationPage /> : <Navigate to="/login" /> } />
