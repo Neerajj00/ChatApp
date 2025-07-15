@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
 import {Link} from "react-router"
 import useSignUp from './../hooks/useSignUp.js';
+import { useTheme } from "../store/useTheme.js";
 
 
 function SignUpPage() {
+  const { theme } = useTheme();
   const [signUpData, setSignUpData] = useState({
     username: "",
     email: "",
@@ -20,8 +22,8 @@ function SignUpPage() {
 
   return (
     <div
-      className="h-screen flex items-start justify-center p-4 sm:p-6 md:p-8"
-      data-theme="forest"
+      className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
+      data-theme={theme}
     >
       <div className="border border-primary/25 flex flex-col lg:flex-row w-full max-w-5xl mx-auto bg-base-100 rounded-xl shadow-lg overflow-hidden">
         {/* signup form - left side */}

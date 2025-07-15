@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { ShipWheelIcon } from 'lucide-react';
 import { Link } from 'react-router';
 import useLogin from '../hooks/useLogin.js';
+import { useTheme } from '../store/useTheme.js';
 
 function LoginPage() {
+  const { theme } = useTheme();
   const [loginData, setLoginData] = useState({
     email:"",
     password:"",
@@ -19,7 +21,7 @@ function LoginPage() {
   return (
     <div
       className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
-      data-theme="forest"
+      data-theme={theme}
     >
       <div className="border border-primary/25 flex flex-col lg:flex-row w-full max-w-5xl mx-auto bg-base-100 rounded-xl shadow-lg overflow-hidden">
         {/* LOGIN FORM SECTION */}
