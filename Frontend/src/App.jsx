@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router"
 import HomePage from './pages/HomePage.jsx';
 import SignUpPage from './pages/SignUpPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
-import NotificationPage from './pages/NotificationPage.jsx';
 import CallPage from './pages/CallPage.jsx';
 import ChatPage from './pages/ChatPage.jsx';
 import OnBoardingPage from './pages/OnBoardingPage.jsx';
@@ -12,6 +11,7 @@ import Loader from "./components/Loader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
 import Layout  from "./components/Layout.jsx";
 import {useTheme} from "./store/useTheme.js"
+import NotificationsPage from "./pages/NotificationPage.jsx";
 
 function App() {
   const {isLoading, authUser} = useAuthUser();
@@ -31,9 +31,9 @@ function App() {
         : <Navigate to={!isAuthenticated ? "/login" : "/onboarding" } /> } />
         <Route path="/signup" element={ !isAuthenticated ? <SignUpPage/> : <Navigate to={isOnBoarded ? "/" : "/onboarding" } /> } />
         <Route path="/login" element={ !isAuthenticated ? <LoginPage/> : <Navigate to={isOnBoarded ? "/" : "/onboarding" } /> } />
-        <Route path="/notification" element={ isAuthenticated ? 
+        <Route path="/notifications" element={ isAuthenticated ? 
         <Layout>
-          <NotificationPage />
+          <NotificationsPage />
         </Layout>
         : <Navigate to={!isAuthenticated ? '/login' : '/onboarding'} /> } />
         <Route path="/call" element={ isAuthenticated ? <CallPage/> : <Navigate to="/login" /> } />
