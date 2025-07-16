@@ -32,7 +32,7 @@ function App() {
         <Route path="/signup" element={ !isAuthenticated ? <SignUpPage/> : <Navigate to={isOnBoarded ? "/" : "/onboarding" } /> } />
         <Route path="/login" element={ !isAuthenticated ? <LoginPage/> : <Navigate to={isOnBoarded ? "/" : "/onboarding" } /> } />
         <Route path="/notifications" element={ isAuthenticated ? 
-        <Layout>
+        <Layout showSidebar={true}>
           <NotificationsPage />
         </Layout>
         : <Navigate to={!isAuthenticated ? '/login' : '/onboarding'} /> } />
