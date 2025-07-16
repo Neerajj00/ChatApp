@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 import FriendCard , {getLanguageFlag} from './../components/FriendCard.jsx';
 import NoFriendsFound from './../components/NoFriendsFound.jsx';
 import { capitialize } from './../lib/utils.js';
+import { toast } from 'react-hot-toast';
 
 function HomePage() {
   
@@ -28,14 +29,19 @@ function HomePage() {
 
   const {mutate:sendRequestMutation, isPending} = useMutation({
     mutationFn: sendFriendRequest,
-    onSuccess:() => queryClient.invalidateQueries({queryKey:["outGoingFriendRequest"]})
+    onSuccess:() => queryClient.invalidateQueries({queryKey:["outGoingFriendRequest"]}),
+    onError: (error) => {
+      toast.error("Failed to send friend request");
+      console.error("Send Friend Request Error:", error);
+    },
   })
 
   useEffect(()=>{
     const outGoingIds = new Set();
     if(outGoingRequests && outGoingRequests.length > 0){
       outGoingRequests.forEach(req => {
-        outGoingIds.add(req.recipient.id)
+        console.log(req)
+        outGoingIds.add(req.recipient._id)
       });
       setOutGoingRequestState(outGoingIds)
     }
