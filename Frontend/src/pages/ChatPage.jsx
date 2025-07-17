@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 
 import ChatLoader from "../components/ChatLoader"
 // import CallButton from "../components/CallButton";
+import CallButton from './../components/CallButton';
 
 
 const ChatPage = () => {
@@ -81,7 +82,9 @@ const ChatPage = () => {
     initChat();
   }, [tokenData, authUser, targetUserId]);
 
- 
+ function handleVideoCall(){
+
+ }
 
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
@@ -90,7 +93,7 @@ const ChatPage = () => {
       <Chat client={chatClient}>
         <Channel channel={channel}>
           <div className="w-full relative">
-            {/* <CallButton handleVideoCall={handleVideoCall} /> */}
+            <CallButton handleVideoCall={handleVideoCall} />
             <Window>
               <ChannelHeader />
               <MessageList />
