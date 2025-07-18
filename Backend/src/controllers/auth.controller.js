@@ -159,6 +159,25 @@ export async function onboard(req, res){
     });
   }
 
+  // check for valid bio
+  if(bio.length > 50){
+    return res.status(400).json({message:"Bio cannot be more than 50 characters long"});
+  }
+
+  if(containsProfanity(bio)){
+    return res.status(400).json({message:"You can't use this bio"});
+  }
+  if(containsMyName(bio)){
+    return res.status(400).json({message:"You can't use this bio"});
+  }
+
+  if(containsProfanity(location)){
+    return res.status(400).json({message:"You can't use this location"});
+  }
+  if(containsMyName(location)){
+    return res.status(400).json({message:"You can't use this location"});
+  }
+
   const updatedUser = await User.findByIdAndUpdate(userId, {
     ...req.body,
     isOnBoarded:true,

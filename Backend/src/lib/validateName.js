@@ -5,7 +5,8 @@ export function isValidUsername(username) {
 }
 export function containsMyName(str) {
     const lowerStr = str.toLowerCase();
-    return lowerStr.includes("neeraj") || lowerStr.includes("niraj");
+    return lowerStr.includes("neeraj") || lowerStr.includes("niraj") || lowerStr.includes("neiraj") || lowerStr.includes("nieraj") ||
+    lowerStr.includes("raaj")
   }
   
   
