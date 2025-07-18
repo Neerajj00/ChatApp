@@ -5,8 +5,9 @@ export function isValidUsername(username) {
 }
 export function containsMyName(str) {
     const lowerStr = str.toLowerCase();
-    return lowerStr.includes("neeraj") || lowerStr.includes("niraj") || lowerStr.includes("neiraj") || lowerStr.includes("nieraj") ||
-    lowerStr.includes("raaj")
+    const blockedNames = process.env.BLOCKED_NAMES?.split(",") || [];
+  
+    return blockedNames.some(name => lowerStr.includes(name));
   }
   
   
