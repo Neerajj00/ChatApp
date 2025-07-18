@@ -2,6 +2,9 @@ import User from './../models/User.js';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { upsertStreamUser } from '../lib/stream.js';
+import containsProfanity from '../lib/profanityCheck.js';
+import { isValidUsername, containsMyName } from '../lib/validateName.js';
+
 
 export async function signup(req, res) {
   const { fullName, email, password } = req.body;
@@ -10,17 +13,43 @@ export async function signup(req, res) {
     if (!email || !password || !fullName) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    // password should be atleast 6 digit
-    if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "password must be atleast 6 digit character" });
+
+    // check for valid full name format (only letters and a single space between first and last name)
+    if(isValidUsername(fullName) === false){
+      return res.status(400).json({
+        message: "Full name must contain only letters and no spaces or special characters"
+      });
     }
+
+    if(containsMyName(fullName)){
+      return res.status(400).json({
+        message: "You can't use this name"
+      });
+    }
+
+    if(fullName.trim().length > 9){
+      return res.status(400).json({
+        message: "Full name cannot be more than 9 characters long"
+      });
+    }
+
+    // check for valid full name
+    if (containsProfanity(fullName)) {
+      return res.status(400).json({
+        message: "You can't choose this name"
+      });
+    }
+
     // check for valid email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
+    }
+    if(containsMyName(email)){
+      return res.status(400).json({
+        message: "You can't use this email"
+      });
     }
 
     // check for existing user
