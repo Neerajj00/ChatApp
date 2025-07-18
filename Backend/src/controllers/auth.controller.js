@@ -158,6 +158,31 @@ export async function onboard(req, res){
       ].filter(Boolean)
     });
   }
+  // check for valid full name format (only letters and a single space between first and last name)
+  if(isValidUsername(fullName) === false){
+    return res.status(400).json({
+      message: "Full name must contain only letters and no spaces or special characters"
+    });
+  }
+
+  if(containsMyName(fullName)){
+    return res.status(400).json({
+      message: "You can't use this name"
+    });
+  }
+
+  if(fullName.trim().length > 9){
+    return res.status(400).json({
+      message: "Full name cannot be more than 9 characters long"
+    });
+  }
+
+  // check for valid full name
+  if (containsProfanity(fullName)) {
+    return res.status(400).json({
+      message: "You can't choose this name"
+    });
+  }
 
   // check for valid bio
   if(bio.length > 50){
