@@ -17,6 +17,3 @@ Backend/build/
 # OS-specific
 .DS_Store
 Thumbs.db
-
-# validation files
-**/profanityWords.json
